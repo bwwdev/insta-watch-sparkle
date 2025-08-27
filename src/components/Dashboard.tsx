@@ -71,7 +71,7 @@ export function Dashboard() {
     });
 
     return Array.from(groupedMap.entries()).map(([postCode, posts]) => {
-      const sortedPosts = posts.sort((a, b) => new Date(a.post_date).getTime() - new Date(b.post_date).getTime());
+      const sortedPosts = posts.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
       const firstPost = sortedPosts[0];
       const lastPost = sortedPosts[sortedPosts.length - 1];
 
@@ -81,7 +81,7 @@ export function Dashboard() {
       const totalShares = Math.max(...sortedPosts.map(p => p.shares || 0));
 
       const engagementData = sortedPosts.map(post => ({
-        date: post.post_date,
+        date: post.created_at,
         likes: post.likes || 0,
         comments: post.comments || 0,
         views: post.views || 0,
@@ -103,8 +103,8 @@ export function Dashboard() {
         totalViews,
         totalShares,
         engagementData,
-        firstPostDate: firstPost.post_date,
-        lastPostDate: lastPost.post_date,
+        firstPostDate: firstPost.created_at,
+        lastPostDate: lastPost.created_at,
       };
     });
   };
