@@ -61,7 +61,22 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				chart: {
+					likes: 'hsl(var(--chart-likes))',
+					comments: 'hsl(var(--chart-comments))',
+					views: 'hsl(var(--chart-views))',
+					shares: 'hsl(var(--chart-shares))'
 				}
+			},
+			backgroundImage: {
+				'gradient-instagram': 'var(--gradient-instagram)',
+				'gradient-subtle': 'var(--gradient-subtle)',
+				'gradient-card': 'var(--gradient-card)'
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'hover': 'var(--shadow-hover)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
