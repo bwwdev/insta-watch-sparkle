@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ExternalLink, Play, Heart, MessageCircle, Eye, Share2, Calendar, TrendingUp } from "lucide-react";
+import { ArrowLeft, ExternalLink, Play, Heart, MessageCircle, Eye, Share2, Calendar, TrendingUp, TrendingDown, BarChart3 } from "lucide-react";
 import { UniquePost } from "@/types/watchdog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { format } from "date-fns";
@@ -25,6 +25,18 @@ export function PostDetailView({ post, onBack }: PostDetailViewProps) {
     date: format(new Date(item.date), 'MMM d'),
     engagement: item.likes + item.comments
   }));
+
+  // Calculate daily changes
+  const dailyChangeData = post.engagementData.map((current, index) => {
+    const previous = index > 0 ? post.engagementData[index - 1] : null;
+    return {
+      date: format(new Date(current.date), 'MMM d'),
+      likesChange: previous ? current.likes - previous.likes : current.likes,
+      commentsChange: previous ? current.comments - previous.comments : current.comments,
+      viewsChange: previous ? current.views - previous.views : current.views,
+      sharesChange: previous ? current.shares - previous.shares : current.shares,
+    };
+  });
 
   const latestData = post.engagementData[post.engagementData.length - 1];
   const previousData = post.engagementData[post.engagementData.length - 2];
@@ -256,6 +268,71 @@ export function PostDetailView({ post, onBack }: PostDetailViewProps) {
                   />
                   <Bar dataKey="views" fill="hsl(var(--chart-views))" radius={[2, 2, 0, 0]} />
                   <Bar dataKey="shares" fill="hsl(var(--chart-shares))" radius={[2, 2, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Daily Engagement Changes */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="bg-gradient-card border-0 shadow-card backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Daily Likes & Comments Change
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={dailyChangeData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                  <XAxis dataKey="date" className="text-xs" />
+                  <YAxis className="text-xs" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number, name: string) => [
+                      `${value >= 0 ? '+' : ''}${value}`,
+                      name.replace('Change', ' Change')
+                    ]}
+                  />
+                  <Bar dataKey="likesChange" fill="hsl(var(--chart-likes))" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="commentsChange" fill="hsl(var(--chart-comments))" radius={[2, 2, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-card border-0 shadow-card backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingDown className="h-5 w-5" />
+                Daily Views & Shares Change
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={dailyChangeData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                  <XAxis dataKey="date" className="text-xs" />
+                  <YAxis className="text-xs" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))', 
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                    formatter={(value: number, name: string) => [
+                      `${value >= 0 ? '+' : ''}${value}`,
+                      name.replace('Change', ' Change')
+                    ]}
+                  />
+                  <Bar dataKey="viewsChange" fill="hsl(var(--chart-views))" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="sharesChange" fill="hsl(var(--chart-shares))" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
