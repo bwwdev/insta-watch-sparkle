@@ -35,7 +35,8 @@ export function Dashboard() {
       const { data, error } = await supabase
         .from('watch_dog')
         .select('*')
-        .order('post_date', { ascending: true });
+        .order('post_date', { ascending: true })
+        .limit(10000);
 
       if (error) {
         toast({
