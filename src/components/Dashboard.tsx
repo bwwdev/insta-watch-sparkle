@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, TrendingUp, Users, Video, Image, BarChart3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, TrendingUp, Users, Video, Image, BarChart3, Copy } from "lucide-react";
 import { PostCard } from "./PostCard";
 import { PostDetailView } from "./PostDetailView";
 import { UniquePost, WatchDogPost } from "@/types/watchdog";
@@ -119,6 +120,23 @@ export function Dashboard() {
     ? posts.reduce((sum, p) => sum + ((p.totalLikes + p.totalComments) / p.followers * 100), 0) / posts.length 
     : 0;
 
+  const copyPageText = async () => {
+    try {
+      const pageText = document.body.innerText;
+      await navigator.clipboard.writeText(pageText);
+      toast({
+        title: "Copied to clipboard",
+        description: "Page content has been copied successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to copy",
+        description: "Unable to copy page content to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (selectedPost) {
     return (
       <PostDetailView 
@@ -132,7 +150,18 @@ export function Dashboard() {
     <div className="min-h-screen bg-gradient-subtle">
       <div className="container mx-auto p-6 space-y-6">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 relative">
+          <div className="absolute top-0 right-0">
+            <Button
+              onClick={copyPageText}
+              variant="outline"
+              size="sm"
+              className="gap-2"
+            >
+              <Copy className="h-4 w-4" />
+              Copy Page
+            </Button>
+          </div>
           <div className="inline-flex items-center gap-2 bg-gradient-instagram bg-clip-text text-transparent">
             <BarChart3 className="h-8 w-8 text-primary" />
             <h1 className="text-4xl font-bold">Instagram Analytics Dashboard</h1>
